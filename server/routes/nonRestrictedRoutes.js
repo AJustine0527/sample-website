@@ -1,14 +1,14 @@
 import express from 'express'
-import * as memberCtlr from '../controllers/memberCtlr'
+import * as customerCtlr from '../controllers/customerCtlr'
 
 var nonRestrictedRoutes = express.Router()
 
-nonRestrictedRoutes.post("/member/register", function (req, res) {
-    memberCtlr.register(req.body, res)
+nonRestrictedRoutes.post("/customer/signup", function (req, res) {
+    customerCtlr.signUp(req.body, res)
 })
 
-nonRestrictedRoutes.post("/member/login", function (req, res) {
-    memberCtlr.login(req.body, res)
+nonRestrictedRoutes.post("/customer/login", function (req, res) {
+    customerCtlr.login(req.body, res)
 })
 
 export default nonRestrictedRoutes;

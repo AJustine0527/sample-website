@@ -10,6 +10,7 @@ import { ENV } from '../config/env';
 import { config } from '../config/app';
 
 import nonRestrictedRoutes from './routes/nonRestrictedRoutes'
+import customerRoutes from './routes/customerRoutes';
 
 export default (app) => {
   app.set('port', (process.env.PORT || config.port));
@@ -28,6 +29,7 @@ export default (app) => {
   app.use(express.static(path.join(process.cwd(), 'public')));
 
   app.use("/api", nonRestrictedRoutes)
+  app.use("/api", customerRoutes)
 
   console.log('--------------------------');
   console.log('===> 😊  Starting Server . . .');

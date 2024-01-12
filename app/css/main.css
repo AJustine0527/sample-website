@@ -127,6 +127,11 @@ body {
     box-shadow: 0 0 0 0.2rem #9e742b69;
 }
 
+.form-control.error{
+    border-color: #d52828;
+    box-shadow: 0 0 0 0.2rem #d5282869;
+}
+
 .qty-input{
     border: 1px solid #eee;
     background-color: #fff;
@@ -242,4 +247,9 @@ body {
     margin-bottom: 15px;
     font-size: 14px;
     color: #656565;
+}
+
+.err-msg{
+    font-size: 12px!important;
+    color: #d52828;
 }

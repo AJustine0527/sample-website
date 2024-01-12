@@ -3,14 +3,14 @@ import { ClipLoader } from 'react-spinners';
 
 export default function ButtonWithLoader(props){
 
-    const {classNames, isLoading, isDisabled, loaderColor} = props
+    const {classNames, isLoading, isDisabled, loaderColor, type} = props
 
     const handleClick=()=>{
         props.onClick()
     }
 
     return(
-        <button className={classNames} disabled={isLoading || isDisabled} onClick={handleClick}>
+        <button type={type?type:"button"} className={classNames} disabled={isLoading || isDisabled} onClick={handleClick}>
             {
                 isLoading?
                 <div className='mr-2'>

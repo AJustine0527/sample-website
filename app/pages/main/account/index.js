@@ -12,9 +12,7 @@ export function Index(props) {
     useEffect(() => {
         window.scrollTo(0,0)
         let userinfo = JSON.parse(localStorage.getItem("userinfo"))
-        if(userinfo){
-
-        }else{
+        if(!userinfo){
             history.replace({pathname: "/home"})
         }
     }, [])
