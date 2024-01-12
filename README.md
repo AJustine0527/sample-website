@@ -1,2 +1,2 @@
-# latest_website_project
-latest website project
+# sample_website
+sample website with add to cart function using localStorage
