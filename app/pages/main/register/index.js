@@ -91,7 +91,7 @@ export function Index(props) {
                 <h1>Create Account</h1>
             </div>
             <div className='col-12 col-md-6'>
-                {err.field === ''?<div className='form-group'>{errorMessage}</div>:null}
+                {err.field === ''?<div className='mb-1'>{errorMessage}</div>:null}
                 <div className='form-group'>
                     <input type="text"
                         className={err.field === 'first_name'?'form-control error':'form-control'}
@@ -131,7 +131,11 @@ export function Index(props) {
                 <div className='d-flex justify-content-end mb-3'>
                     <span>Returning Customer? <a href='javascript:void(0)' onClick={handleLogin}>Sign in <i className='far fa-long-arrow-right'/></a></span>
                 </div>
-                <ButtonWithLoader isLoading={loadState=="signup"} classNames='btn btn-block primary-btn' loaderColor="#cfad61" type='submit' onClick={()=>{}}>Sign Up</ButtonWithLoader>
+                <ButtonWithLoader isLoading={loadState=="signup"} 
+                    className='btn btn-block primary-btn' 
+                    loaderColor="#cfad61" 
+                    type='submit' 
+                    onClick={()=>{}}>Sign Up</ButtonWithLoader>
             </div>
         </div>
     </form>

@@ -132,6 +132,25 @@ body {
     box-shadow: 0 0 0 0.2rem #d5282869;
 }
 
+.input-group .form-control{
+    padding-right: 50px;
+}
+
+.input-group .form-control + .input-group-append{
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    z-index: 4;
+}
+
+.input-group .form-control + .input-group-append .input-group-text{
+    background: transparent;
+    border: 0;
+    font-size: 14px;
+    width: 50px;
+}
+
 .qty-input{
     border: 1px solid #eee;
     background-color: #fff;

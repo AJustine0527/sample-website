@@ -186,3 +186,65 @@ export function updateInfo(body, res) {
             res.json({ status: 0, message: error.name })
         })
 }
+
+export function changePassword(body, res) {
+
+    let customerPwd = ""
+
+    const getCustomerPwd = function () {
+        return new Promise(function (resolve, reject) {
+            Customer.findById(body._id).lean()
+                .exec((err, result) => {
+                    if (result) {
+                        customerPwd = result.password
+                        resolve()
+                    } else {
+                        reject({ name: "Customer not found" })
+                    }
+                })
+        })
+    }
+
+    const checkPassword = function () {
+        return new Promise(function (resolve, reject) {
+            verifyHash(customerPwd, body.old_password, (err, isMatch) => {
+                if (isMatch) {
+                    resolve()
+                } else {
+                    reject({name: "Old password is incorrect"});
+                }
+            })
+        })
+    }
+
+    const updatePassword = function () {
+        return new Promise(function (resolve, reject) {
+            hashString(body.new_password, function (err, hash) {
+                if (err) {
+                    reject(err)
+                } else {
+                    Customer.findByIdAndUpdate(body._id, { password: hash })
+                        .exec((err, result) => {
+                            if (err) {
+                                reject(err);
+                            } else {
+                                resolve();
+                            }
+                        });
+                }
+            })
+        })
+    }
+
+    getCustomerPwd() 
+        .then(checkPassword)
+        .then(updatePassword)
+        .then(function () {
+            res.json({ status: 1 });
+        })
+        .catch(function (err) {
+            console.log(err);
+            var response = { status: 0, message: err.name };
+            res.json(response);
+        })
+}

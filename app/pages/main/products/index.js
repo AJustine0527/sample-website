@@ -4,7 +4,7 @@ import _ from 'lodash';
 import { products } from './Products';
 import { useDispatch } from 'react-redux';
 import { loadHeader } from '../../../types';
-import { toast } from 'react-toastify';
+import toast from 'react-hot-toast';
 
 export default function Index(props) {
 

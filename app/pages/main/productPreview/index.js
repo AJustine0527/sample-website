@@ -6,7 +6,7 @@ import { products } from '../products/Products'
 import NumberCounter from '../../../components/NumberCounter';
 import { useDispatch } from 'react-redux';
 import { loadHeader } from '../../../types';
-import { toast } from 'react-toastify';
+import toast from 'react-hot-toast';
 
 export default function Index(props) {
 

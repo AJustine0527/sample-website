@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import {Helmet} from "react-helmet";
 import icon from '../images/icon.png'
-import { ToastContainer } from 'react-toastify';
+import { Toaster } from 'react-hot-toast';
 
 function App(props) {
 
@@ -36,7 +36,12 @@ function App(props) {
 				<title>Wine Time</title>
 			</Helmet>
 			{content}
-			<ToastContainer/>
+			<Toaster toastOptions={{
+				duration: 2000,
+				style: {
+					fontSize: 14
+				},
+			}}/>
 		</>
 	)
 }

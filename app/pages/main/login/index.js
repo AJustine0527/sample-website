@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import { browserHistory } from 'react-router'
-import { useDispatch } from 'react-redux';
 import _ from 'lodash';
 import ButtonWithLoader from '../../../components/ButtonWithLoader';
 import callApi from '../../../utils/apiCaller';
@@ -18,11 +17,11 @@ const initErr = {
 export function Index(props) {
 
     const history = browserHistory
-    const dispatch = useDispatch()
 
     const [loadState, setLoadState] = useState("")
     const [formdata, setForm] = useState(initForm)
     const [err, setError] = useState(initErr)
+    const [isPwdShown, showPwd] = useState(false)
 
     useEffect(() => {
         window.scrollTo(0,0)
@@ -71,6 +70,10 @@ export function Index(props) {
         }
     }
 
+    const handleShowPwd = ()=>{
+        showPwd(!isPwdShown)
+    }
+
     useEffect(()=>{
         if(loadState == "login success"){
             history.push('/account')
@@ -88,7 +91,7 @@ export function Index(props) {
                             <h1>Login</h1>
                         </div>
                         <div className='col-12 col-md-6'>
-                            {err.field === ''?<div className='form-group'>{errorMessage}</div>:null}
+                            {err.field === ''?<div className='mb-1'>{errorMessage}</div>:null}
                             <div className='form-group'>
                                 <input type="text"
                                     className={err.field === 'email_address'?'form-control error':'form-control'}
@@ -102,18 +105,29 @@ export function Index(props) {
                                 <a href='javascript:void(0)'>Forgot your password?</a>
                             </div>
                             <div className='form-group'>
-                                <input type="password"
-                                    className={err.field === 'password'?'form-control error':'form-control'}
-                                    placeholder='Password'
-                                    name="password"
-                                    value={formdata.password}
-                                    onChange={handleChange}/>
+                                <div className='input-group'>
+                                    <input type={isPwdShown?"text":"password"}
+                                        className={err.field === 'password'?'form-control error':'form-control'}
+                                        placeholder='Password'
+                                        name="password"
+                                        value={formdata.password}
+                                        onChange={handleChange}/>
+                                    <div className='input-group-append'>
+                                        <button type='button' className='btn input-group-text' onClick={handleShowPwd}>
+                                            <i className={isPwdShown?'far fa-eye':'far fa-eye-slash'}/>
+                                        </button>
+                                    </div>
+                                </div>
                                 {err.field === 'password'?errorMessage:null}
                             </div>
                             <div className='d-flex justify-content-end mb-3'>
                                 <span>New Customer? <a href='javascript:void(0)' onClick={handleRegister}>Sign up <i className='far fa-long-arrow-right'/></a></span>
                             </div>
-                            <ButtonWithLoader isLoading={loadState=="login"} classNames='btn btn-block primary-btn' loaderColor="#cfad61" type="submit" onClick={()=>{}}>Sign In</ButtonWithLoader>
+                            <ButtonWithLoader isLoading={loadState=="login"} 
+                                className='btn btn-block primary-btn' 
+                                loaderColor="#cfad61" 
+                                type="submit" 
+                                onClick={()=>{}}>Sign In</ButtonWithLoader>
                         </div>
                     </div>
                 </form>

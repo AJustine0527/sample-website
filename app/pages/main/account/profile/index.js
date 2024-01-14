@@ -1,17 +1,17 @@
 import React, { useEffect, useState } from 'react'
-import { browserHistory } from 'react-router'
-import { useDispatch } from 'react-redux';
-import _ from 'lodash';
 import ButtonWithLoader from '../../../../components/ButtonWithLoader';
 import { validateEmail } from '../../../../components/CustomFunctions';
-import { toast } from 'react-toastify';
 import callApi from '../../../../utils/apiCaller';
+import _ from 'lodash';
+import toast from 'react-hot-toast';
 
 const initForm = {
     first_name: "",
     last_name: "",
     email_address: "",
-    password: ""
+    old_password: "",
+    new_password: "",
+    confirm_password: ""
 }
 
 const initErr = {
@@ -21,13 +21,11 @@ const initErr = {
 
 export function Index(props) {
 
-    const history = browserHistory
-    const dispatch = useDispatch()
-
     const [user, setUser] = useState({})
     const [formdata, setForm] = useState(initForm)
     const [err, setError] = useState(initErr)
     const [loadState, setLoadState] = useState("")
+    const [shownPwds, setShownPwds] = useState([])
 
     useEffect(() => {
         window.scrollTo(0,0)
@@ -44,7 +42,13 @@ export function Index(props) {
             const ret = await callApi('customer/info/get/'+id);
             if (ret.status === 1) {
                 setLoadState("load success")
-                setForm(ret.userdata)
+                var new_form = {
+                    ...ret.userdata,
+                    old_password: "",
+                    new_password: "",
+                    confirm_password: ""
+                }
+                setForm(new_form)
                 setUser(ret.userdata)
             } else {
                 setLoadState("load failed")
@@ -80,25 +84,69 @@ export function Index(props) {
         }else{
             setLoadState("update")
             try {
-                const ret = await callApi('customer/info/update', 'post', formdata);
+                const ret = await callApi('customer/info/update', 'put', formdata);
                 if (ret.status === 1) {
                     setLoadState("update success")
                     localStorage.setItem("userinfo", JSON.stringify(ret.userdata))
+                    toast.success("Personal information successfully updated")
                 } else {
                     setLoadState("update failed")
-                    setError({field: "", message: ret.message})
+                    setError({field: "personal_info", message: ret.message})
                 }
             } catch (error) {
                 console.log(error);
                 setLoadState("update failed")
-                setError({field: "", message: error})
+                setError({field: "personal_info", message: error})
             }
+        }
+    }
+
+    const handleChangePassword=async()=>{
+
+        if(_.isEmpty(formdata.old_password.trim())){
+            setError({field: "old_password", message:"Please enter your old password"})
+        }else if(_.isEmpty(formdata.new_password.trim())){
+            setError({field: "new_password", message:"Please enter your new password"})
+        }else if(formdata.new_password.length < 8){
+            setError({field: "new_password", message:"Password must be at least 8 characters long"})
+        }else if(_.isEmpty(formdata.confirm_password.trim())){
+            setError({field: "confirm_password", message:"Please confirm your new password"})
+        }else if(formdata.confirm_password !== formdata.new_password){
+            setError({field: "confirm_password", message:"Password didn't match"})
+        }else{
+            setLoadState("update")
+            try {
+                const ret = await callApi('customer/password/update', 'put', formdata);
+                if (ret.status === 1) {
+                    setLoadState("update success")
+                    toast.success("Password successfully changed")
+                } else {
+                    setLoadState("update failed")
+                    setError({field: "change_pwd", message: ret.message})
+                }
+            } catch (error) {
+                console.log(error);
+                setLoadState("update failed")
+                setError({field: "change_pwd", message: error})
+            }
+        }
+    }
+
+    const handleShowPwd=(field)=>{
+        if(shownPwds.includes(field)){
+            var new_fields = _.filter(shownPwds,(o)=>{return o !== field})
+            setShownPwds(new_fields)
+        }else{
+            var new_fields = [
+                ...shownPwds
+            ]
+            new_fields.push(field)
+            setShownPwds(new_fields)
         }
     }
 
     useEffect(()=>{
         if(loadState === "update success"){
-            toast.success("Personal information successfully updated")
             onInit(user._id)
         }
     },[loadState])
@@ -115,7 +163,7 @@ export function Index(props) {
                 <div className='row'>
                     <div className='col-12 col-lg-6 mb-3 mb-lg-0'>
                         <p className='title'>Personal Information</p>
-                        {err.field === ''?<div className='form-group'>{errorMessage}</div>:null}
+                        {err.field === 'personal_info' && err.message?<div className='mb-1'>{errorMessage}</div>:null}
                         <div className='form-group'>
                             <input type="text"
                                 className={err.field === 'first_name'?'form-control error':'form-control'}
@@ -144,23 +192,68 @@ export function Index(props) {
                             {err.field === 'email_address'?errorMessage:null}
                         </div>
                         <div className='buttons-ctr'>
-                            <ButtonWithLoader isLoading={loadState=="update"} classNames='btn btn-block primary-btn' loaderColor="#cfad61" onClick={handleUpdate}>Update</ButtonWithLoader>
+                            <ButtonWithLoader isLoading={loadState=="update"} 
+                                className='btn btn-block primary-btn' 
+                                loaderColor="#cfad61" 
+                                onClick={handleUpdate}>Update</ButtonWithLoader>
                         </div>
                     </div>
                     <div className='col-12 col-lg-6'>
                         <p className='title'>Change Password</p>
+                        {err.field === 'change_pwd' && err.message?<div className='mb-1'>{errorMessage}</div>:null}
                         <div className='form-group'>
-                            <input type="password"
-                                className='form-control'
-                                placeholder='New Password'/>
+                            <div className='input-group'>
+                                <input type={shownPwds.includes("old")?"text":"password"}
+                                    className={err.field === 'old_password'?'form-control error':'form-control'}
+                                    placeholder='Old Password'
+                                    name="old_password"
+                                    value={formdata.old_password}
+                                    onChange={handleChange}/>
+                                <div className='input-group-append'>
+                                    <button className='btn input-group-text' onClick={()=>handleShowPwd("old")}>
+                                        <i className={shownPwds.includes("old")?'far fa-eye':'far fa-eye-slash'}/>
+                                    </button>
+                                </div>
+                            </div>
+                            {err.field === 'old_password'?errorMessage:null}
                         </div>
                         <div className='form-group'>
-                            <input type="password"
-                                className='form-control'
-                                placeholder='Confirm Password'/>
+                            <div className='input-group'>
+                                <input type={shownPwds.includes("new")?"text":"password"}
+                                    className={err.field === 'new_password'?'form-control error':'form-control'}
+                                    placeholder='New Password'
+                                    name="new_password"
+                                    value={formdata.new_password}
+                                    onChange={handleChange}/>
+                                <div className='input-group-append'>
+                                    <button className='btn input-group-text' onClick={()=>handleShowPwd("new")}>
+                                        <i className={shownPwds.includes("new")?'far fa-eye':'far fa-eye-slash'}/>
+                                    </button>
+                                </div>
+                            </div>
+                            {err.field === 'new_password'?errorMessage:null}
+                        </div>
+                        <div className='form-group'>
+                            <div className='input-group'>
+                                <input type={shownPwds.includes("confirm")?"text":"password"}
+                                    className={err.field === 'confirm_password'?'form-control error':'form-control'}
+                                    placeholder='Confirm Password'
+                                    name="confirm_password"
+                                    value={formdata.confirm_password}
+                                    onChange={handleChange}/>
+                                <div className='input-group-append'>
+                                    <button className='btn input-group-text' onClick={()=>handleShowPwd("confirm")}>
+                                        <i className={shownPwds.includes("confirm")?'far fa-eye':'far fa-eye-slash'}/>
+                                    </button>
+                                </div>
+                            </div>
+                            {err.field === 'confirm_password'?errorMessage:null}
                         </div>
                         <div className='buttons-ctr'>
-                            <button className='btn ml-auto mt-auto primary-btn outlined'>Change Password</button>
+                            <ButtonWithLoader isLoading={loadState=="update"} 
+                                className='btn btn-block primary-btn outlined' 
+                                loaderColor="#cfad61" 
+                                onClick={handleChangePassword}>Change Password</ButtonWithLoader>
                         </div>
                     </div>
                 </div>

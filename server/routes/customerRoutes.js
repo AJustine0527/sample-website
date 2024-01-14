@@ -28,8 +28,12 @@ customerRoutes.get("/customer/info/get/:id", function (req, res) {
     customerCtlr.getInfo(req.params.id, res)
 })
 
-customerRoutes.post("/customer/info/update", function (req, res) {
+customerRoutes.put("/customer/info/update", function (req, res) {
     customerCtlr.updateInfo(req.body, res)
+})
+
+customerRoutes.put("/customer/password/update", function (req, res) {
+    customerCtlr.changePassword(req.body, res)
 })
 
 export default customerRoutes;

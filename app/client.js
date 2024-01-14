@@ -11,7 +11,6 @@ import fetchDataForRoute from './utils/fetchDataForRoute';
 import 'bootstrap/dist/js/bootstrap.bundle.min';
 import 'jquery';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import 'react-toastify/dist/ReactToastify.css';
 import 'react-responsive-modal/styles.css';
 import './css/main.css';
 import './css/home.css';
