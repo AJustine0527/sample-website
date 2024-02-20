@@ -4,13 +4,17 @@ import { isDebug, config } from '../config/app';
 import initExpress from './express';
 import renderMiddleware from './render/middleware';
 import mongoose from 'mongoose';
-var bodyParser = require("body-parser")
 
 const app = express();
 
-app.use(bodyParser.json({limit: '50mb'}));
-app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
-app.use(express.json());
+// old approach. express now has urlencoded func
+// app.use(bodyParser.json({limit: '50mb'}));
+// app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
+// app.use(express.json());
+
+// new approach
+app.use(express.json({limit: '50mb'}));
+app.use(express.urlencoded({limit: '50mb', extended: true}));
 /*
  * Database-specific setup
  * - connect to MongoDB using mongoose

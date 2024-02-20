@@ -1,5 +1,4 @@
 import express from 'express';
-import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
 import path from 'path';
 import flash from 'express-flash';
@@ -21,8 +20,13 @@ export default (app) => {
     app.use(helmet());
   }
 
-  app.use(bodyParser.json());
-  app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
+  // old approach
+  // app.use(bodyParser.json());
+  // app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
+  
+  // new version
+  app.use(express.json())
+  app.use(express.urlencoded({extended: true}));
   app.use(methodOverride());
   app.use(cookieParser());
 

@@ -1,19 +1,15 @@
-import React, { useEffect, useState } from 'react'
-import { browserHistory } from 'react-router'
+import React, { useEffect } from 'react'
 import _ from 'lodash';
 import sec2_img from '../../../images/sec2_img.jpg'
 import sec5_img from '../../../images/sec5_img.jpg'
 import desc_ic from '../../../images/desc_ic.png'
-import moment from 'moment';
-import Slider from 'react-slick';
 import News from '../../../components/News';
 
 export default function Index(props) {
 
-    const history = browserHistory
-
     useEffect(()=>{
         window.scrollTo(0,0)
+        //main branch
     },[])
 
     return (
