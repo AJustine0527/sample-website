@@ -2,7 +2,7 @@
     height: 100%;
     min-height: 100vh;
 }
-
+/* test */
 #about .sec1 .heads{
     padding: 160px 20px 20px;
 }
@@ -215,11 +215,11 @@
     #about .sec6{
         padding-top: 180px;
     }
-    #about .sec2 .desc-ctr, 
+    #about .sec2 .desc-ctr,
     #about .sec2 .details-ctr,
-    #about .sec3 .img-ctr, 
+    #about .sec3 .img-ctr,
     #about .sec3 .details-ctr,
-    #about .sec6 .slides-ctr, 
+    #about .sec6 .slides-ctr,
     #about .sec6 .details-ctr{
         padding: 0 70px;
     }
